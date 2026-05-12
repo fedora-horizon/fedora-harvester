@@ -4,6 +4,7 @@ version = "0.1.0"
 description = "Automate CKAN harvest jobs from a CSV definition file"
 requires-python = ">=3.11"
 dependencies = [
+    "pandas>=2.2",
     "requests>=2.31",
     "python-dotenv>=1.0",
 ]
