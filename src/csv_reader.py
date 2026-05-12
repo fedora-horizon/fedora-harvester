@@ -17,8 +17,6 @@ def parse_csv(path: str) -> list[dict]:
         row = {}
         for col in df.columns:
             val = series[col].strip()
-            if not val:
-                continue
             row[col] = val
 
         missing = [f for f in REQUIRED_FIELDS if f not in row]
