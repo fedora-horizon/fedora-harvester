@@ -1,0 +1,2 @@
+name,title,url,source_type,owner_org,frequency,active,notes,config
+ispra,ISPRA,https://rep.isprambiente.it/file/catalog/ispra_catalog.ttl,dcat,rep-isprambiente-it,DAILY,False

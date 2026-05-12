@@ -1,0 +1,21 @@
+[project]
+name = "fedora-harvester"
+version = "0.1.0"
+description = "Automate CKAN harvest jobs from a CSV definition file"
+requires-python = ">=3.11"
+dependencies = [
+    "requests>=2.31",
+    "python-dotenv>=1.0",
+]
+
+[project.scripts]
+fedora-harvester = "src.cli:main"
+
+[build-system]
+requires = ["setuptools>=75"]
+build-backend = "setuptools.build_meta"
+
+[dependency-groups]
+dev = [
+    "pytest>=9.0.3",
+]
