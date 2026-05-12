@@ -2,8 +2,10 @@
 __pycache__/
 *.pyc
 .env
+.env.example
 .pytest_cache/
 *.egg-info/
+
 dist/
 build/
-.env.example
+examples/
