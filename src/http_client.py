@@ -35,8 +35,11 @@ class HttpClient:
             body = e.response.text if e.response is not None else str(e)
             raise HttpError(e.response.status_code if e.response is not None else 0, body) from e
 
-    def post(self, path: str, json: dict | None = None,
-             headers: dict | None = None, timeout: int | None = None) -> requests.Response:
+    def post(self, 
+             path: str, 
+             json: dict | None = None,
+             headers: dict | None = None, 
+             timeout: int | None = None) -> requests.Response:
         url = self.base_url + path
         logger.debug("POST %s", url)
         try:
