@@ -47,9 +47,9 @@ The CSV supports these columns:
 
 For each row in the CSV:
 
-1. **Check** if the harvest source already exists via `harvest_source_show`
-2. **Create** it if missing via `harvest_source_create`
-3. **Trigger** a harvest job via `harvest_job_create` (fire-and-forget)
+1. **Check** if the harvest organization exist and **Create** it if missing. 
+2. **Check** it the source exist and **Create** it if missing.
+3. **Trigger** a harvest job.
 
 ## Running tests
 
