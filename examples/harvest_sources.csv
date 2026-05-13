@@ -1,2 +1,2 @@
-name,title,url,source_type,owner_org,frequency,active,notes,config
-ispra,ISPRA,https://rep.isprambiente.it/file/catalog/ispra_catalog.ttl,dcat,rep-isprambiente-it,DAILY,False
+name,title,description,url,source_type,owner_org,frequency,active,notes,config
+ispra2,ISPRA2,,https://rep.isprambiente.it/file/catalog/ispra_catalog.ttl,dcat_rdf,rep-isprambiente-it-2,DAILY,False,,{}

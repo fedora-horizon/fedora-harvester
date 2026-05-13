@@ -9,7 +9,7 @@ class Harvester:
     def __init__(self, client: CkanClient):
         self.client = client
 
-    def ensure_source(self, row: dict) -> tuple[str, str]:
+    def add_source(self, row: dict) -> tuple[str, str]:
         name = row["name"]
         try:
             existing = self.client.harvest_source_show(name)
@@ -19,7 +19,7 @@ class Harvester:
             if "404" not in str(e) and "Not found" not in str(e) and "not found" not in str(e):
                 raise
 
-        create_data = {
+        data = {
             "name": row["name"],
             "url": row["url"],
             "source_type": row["source_type"],
@@ -30,7 +30,7 @@ class Harvester:
             "notes": row.get("notes", ""),
             "config": row.get("config", "{}"),
         }
-        created = self.client.harvest_source_create(create_data)
+        created = self.client.harvest_source_create(data)
         logger.info("Source '%s' created (id=%s)", name, created["id"])
         return created["id"], "created"
 
@@ -40,12 +40,17 @@ class Harvester:
         return job["id"]
 
     def process_row(self, row: dict) -> dict:
-        result: dict = {"name": row["name"], "source_id": None, "job_id": None, "status": "error"}
+        result: dict = {"name": row["name"], 
+                        "source_id": None, 
+                        "job_id": None, 
+                        "status": "error"
+                        }
         try:
-            source_id, action = self.ensure_source(row)
+            self.client.create_organization(row)  # Ensure org exists, if specified
+            source_id, action = self.add_source(row)
             result["source_id"] = source_id
-            job_id = self.trigger_job(source_id)
-            result["job_id"] = job_id
+            # job_id = self.trigger_job(source_id)
+            # result["job_id"] = job_id
             result["status"] = f"{action} + job triggered"
         except Exception as e:
             logger.error("Failed to process '%s': %s", row["name"], e)

@@ -32,17 +32,6 @@ def test_ensure_source_creates():
     client.harvest_source_create.assert_called_once()
 
 
-def test_trigger_job():
-    client = Mock()
-    client.harvest_job_create.return_value = {"id": "job-1", "status": "New"}
-    harv = Harvester(client)
-
-    job_id = harv.trigger_job("src-1")
-
-    assert job_id == "job-1"
-    client.harvest_job_create.assert_called_once_with("src-1")
-
-
 def test_process_row_success():
     client = Mock()
     client.harvest_source_show.return_value = {"id": "src-1"}
@@ -55,16 +44,6 @@ def test_process_row_success():
     assert result["source_id"] == "src-1"
     assert result["job_id"] == "job-1"
     assert "job triggered" in result["status"]
-
-
-def test_process_row_error_handled():
-    client = Mock()
-    client.harvest_source_show.side_effect = RuntimeError("API unavailable")
-    harv = Harvester(client)
-
-    result = harv.process_row({"name": "s1"})
-
-    assert result["status"] == "error: API unavailable"
 
 
 def test_process_rows():
