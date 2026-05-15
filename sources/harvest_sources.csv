@@ -1,0 +1,3 @@
+name,title,description,url,source_type,owner_org,frequency,active,notes,config
+ispra,ISPRA,,https://rep.isprambiente.it/file/catalog/ispra_catalog.ttl,dcat_rdf,rep-isprambiente-it,MANUAL,True,,{}
+istat,istat,,https://www.istat.it/storage/IstatData/catalog_rev.rdf,dcat_rdf,istat-it,MANUAL,True,,{}
