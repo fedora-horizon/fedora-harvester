@@ -11,9 +11,10 @@ class CkanClient:
             base_url=base_url,
             default_headers={"Authorization": api_key},
         )
+        self.api_base_path = "/api/3/action"
 
     def list_organizations(self) -> list[dict]:
-        organizations =  self.http.get("/api/3/action/organization_list")
+        organizations =  self.http.get(f"{self.api_base_path}/organization_list")
         return organizations.json()
 
     def create_organization(self, data: dict) -> dict:
@@ -23,15 +24,15 @@ class CkanClient:
             return {}
         expected_fields = ["name", "title", "description", "image_url", "extras"]
         body = {k: data[k] for k in expected_fields if k in data}
-        return self.http.post("/api/3/action/organization_create", json=body)
+        return self.http.post(f"{self.api_base_path}/organization_create", json=body)
 
     def harvest_source_show(self, source_name: str) -> dict:
-        return self.http.post("/api/3/action/harvest_source_show", json={"id": source_name})
+        return self.http.post(f"{self.api_base_path}/harvest_source_show", json={"id": source_name})
 
     def harvest_source_create(self, data: dict) -> dict:
-        return self.http.post("/api/3/action/harvest_source_create", json=data)
+        return self.http.post(f"{self.api_base_path}/harvest_source_create", json=data)
 
     def harvest_job_create(self, 
                            source_id: str, 
                            run: bool = True) -> dict:
-        return self.http.post("/api/3/action/harvest_job_create", json= {"source_id": source_id, "run": run})
+        return self.http.post(f"{self.api_base_path}/harvest_job_create", json= {"source_id": source_id, "run": run})
