@@ -23,8 +23,8 @@ class CkanClient:
             logger.info("Organization '%s' already exists", data['owner_org'])
             return {}
         expected_fields = ["name", "title", "description", "image_url", "extras"]
-        body = {k: data[k] for k in expected_fields if k in data}
-        return self.http.post(f"{self.api_base_path}/organization_create", json=body)
+        data = {k: data[k] for k in expected_fields if k in data}
+        return self.http.post(f"{self.api_base_path}/organization_create", json=data)
 
     def harvest_source_show(self, source_name: str) -> dict:
         return self.http.post(f"{self.api_base_path}/harvest_source_show", json={"id": source_name})
