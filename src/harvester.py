@@ -47,7 +47,9 @@ class Harvester:
                         }
         try:
             self.client.create_organization(row)  # Ensure org exists, if specified
+            logger.info("Processing source '%s' with URL '%s'", row["name"], row["url"])
             source_id, action = self.add_source(row)
+            logger.info("Source '%s' processed with action '%s'", row["name"], action)
             result["source_id"] = source_id
             # job_id = self.trigger_job(source_id)
             # result["job_id"] = job_id
@@ -58,4 +60,8 @@ class Harvester:
         return result
 
     def process_rows(self, rows: list[dict]) -> list[dict]:
-        return [self.process_row(row) for row in rows]
+        results = []
+        for row in rows:
+            resp = self.process_row(row)
+            results.append(resp)
+        return results
