@@ -1,6 +1,6 @@
 import logging
 
-from src.ckan_client import CkanClient
+from src.ckan.ckan_client import CkanClient
 
 logger = logging.getLogger(__name__)
 

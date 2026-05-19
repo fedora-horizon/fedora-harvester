@@ -1,9 +1,9 @@
 import sys
 import argparse
 import logging
-from src.config import config
-from src.ckan_client import CkanClient
-from src.features import harvest_from_csv, delete_from_csv
+from src.config.config import config
+from src.ckan.ckan_client import CkanClient
+from src.ckan.features import harvest_from_csv, delete_from_csv
 
 logger = logging.getLogger(__name__)
 

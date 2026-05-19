@@ -2,8 +2,8 @@ from unittest.mock import Mock
 
 import pytest
 
-from src.cleaner import Cleaner
-from src.harvester import Harvester
+from src.ckan.cleaner import Cleaner
+from src.ckan.harvester import Harvester
 
 
 class TestHarvesterAddSource:

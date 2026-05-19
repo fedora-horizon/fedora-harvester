@@ -1,5 +1,5 @@
 import logging
-from src.http_client import HttpClient
+from src.utils.http_client import HttpClient
 
 logger = logging.getLogger(__name__)
 

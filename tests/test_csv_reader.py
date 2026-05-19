@@ -1,6 +1,6 @@
 import json
 
-from src.csv_reader import parse_csv
+from src.utils.csv_reader import parse_csv
 
 
 def test_valid_row(tmp_path):
