@@ -16,9 +16,12 @@ class Cleaner:
         }
         try:
             logger.info("Deleting '%s'...", row["name"])
-            source_id = self.client.harvest_source_show(row["name"]).json().get("result", {}).get("id")
+            source = self.client.harvest_source_show(row["name"])
+            source_id = source.get("result", {}).get("id")
             if not source_id:
                 logger.warning("Source '%s' not found — skipping deletion.", row["name"])
+                result["status"] = "not found"
+                return result
             self.client.delete_organization_datasets(row.get("owner_org", ""))
             logger.info("Datasets for organization '%s' deleted successfully", row.get("owner_org", ""))
             self.client.harvest_source_delete(source_id)
@@ -26,7 +29,7 @@ class Cleaner:
             self.client.delete_organization(row.get("owner_org", ""))
             logger.info("Organization '%s' deleted successfully", row.get("owner_org", ""))
             result["status"] = "deleted"
-        except Exception as e:
+        except RuntimeError as e:
             logger.error("Failed to process '%s': %s", row["name"], e)
             result["status"] = f"not deleted: {e}"
         return result
