@@ -1,45 +1,49 @@
+import os
+import sys
 import argparse
 import logging
-import sys
+from src.features import harvest_from_csv , delete_from_csv
 
-from dotenv import load_dotenv
-
-import os
-from src.ckan_client import CkanClient
-from src.csv_reader import parse_csv
-from src.harvester import Harvester
-
-
-load_dotenv()
-
-ckan_url = os.getenv("CKAN_URL")
-ckan_api_key = os.getenv("CKAN_API_KEY")
+logger = logging.getLogger(__name__)
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="CKAN harvest jobs from a CSV file")
-    parser.add_argument("csv_path", help="Path to CSV file with harvest source definitions")
-    parser.add_argument("--verbose", "-v", action="store_true", help="Enable debug logging")
+    """Entry point — parse CLI arguments and dispatch to the appropriate command."""
+    parser = argparse.ArgumentParser(description="CKAN harvest jobs from a CSV file.")
+    parser.add_argument(
+        "--verbose", "-v",
+        action="store_true",
+        help="Enable debug logging.",
+    )
+    main_features = parser.add_mutually_exclusive_group(required=True)
+    main_features.add_argument(
+        "--harvest-from-csv",
+        dest="harvest_from_csv",
+        help="Path to CSV file with harvest source definitions to create.",
+    )
+    main_features.add_argument(
+        "--delete-from-csv",
+        dest="delete_from_csv",
+        help="Path to CSV file with harvest source definitions to delete.",
+    )
+    main_features.add_argument(
+        "--update-from-csv",
+        dest="update_from_csv",
+        help="Path to CSV file with harvest source definitions to update. (Not implemented yet)",
+    )
+    
     args = parser.parse_args()
 
-    level = logging.DEBUG if args.verbose else logging.INFO
     logging.basicConfig(
-        level=level,
+        level=logging.DEBUG if args.verbose else logging.INFO,
         format="%(asctime)s  %(levelname)-8s  %(message)s",
         datefmt="%Y-%m-%d %H:%M:%S",
     )
 
-    client = CkanClient(ckan_url, ckan_api_key)
-    harvester = Harvester(client)
+    if args.harvest_from_csv:
+        harvest_from_csv(args.harvest_from_csv)
 
-    rows = parse_csv(args.csv_path)
-    if not rows:
-        logging.warning("No valid rows found in CSV")
-        sys.exit(1)
-
-    results = harvester.process_rows(rows)
-    logging.info("Processing completed. Summary:")
-    for res in results:
-        logging.info(" - Source '%s': %s", res["name"], res["status"])
+    if args.delete_from_csv:
+        delete_from_csv(args.delete_from_csv)
 
 if __name__ == "__main__":
     main()

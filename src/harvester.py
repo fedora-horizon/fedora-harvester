@@ -18,7 +18,6 @@ class Harvester:
         except RuntimeError as e:
             if "404" not in str(e) and "Not found" not in str(e) and "not found" not in str(e):
                 raise
-
         data = {
             "name": row["name"],
             "url": row["url"],
@@ -30,30 +29,28 @@ class Harvester:
             "notes": row.get("notes", ""),
             "config": row.get("config", "{}"),
         }
-        created = self.client.harvest_source_create(data)
-        logger.info("Source '%s' created (id=%s)", name, created["id"])
-        return created["id"], "created"
-
-    def trigger_job(self, source_id: str) -> str:
-        job = self.client.harvest_job_create(source_id)
-        logger.info("Harvest job created (id=%s, status=%s)", job["id"], job.get("status"))
-        return job["id"]
+        try :
+            created = self.client.harvest_source_create(data)
+            logger.info("Source created (id=%s)", name)
+            # return created.json().get("id").get("result").get("id"), "created"
+            return row["name"], "created"
+        except Exception as e:
+            logger.error("Failed to create source '%s': %s", name, e)
+            return name, f"not created: {e}"
 
     def process_row(self, row: dict) -> dict:
-        result: dict = {"name": row["name"], 
-                        "source_id": None, 
-                        "job_id": None, 
-                        "status": "error"
-                        }
+        result: dict = {
+            "name": row["name"], 
+            "status": "error"
+        }
         try:
-            self.client.create_organization(row)  # Ensure org exists, if specified
-            logger.info("Processing source '%s' with URL '%s'", row["name"], row["url"])
+            resp = self.client.create_organization(row)  # Ensure org exists, if specified
+            if resp:
+                logger.info("Organization '%s' created successfully", row["owner_org"])
+            logger.debug("Processing source '%s' with URL '%s'", row["name"], row["url"])
             source_id, action = self.add_source(row)
-            logger.info("Source '%s' processed with action '%s'", row["name"], action)
-            result["source_id"] = source_id
-            # job_id = self.trigger_job(source_id)
-            # result["job_id"] = job_id
-            result["status"] = f"{action} + job triggered"
+            logger.info("Source '%s' created successfully", row["name"])
+            result["status"] = f"{action}"
         except Exception as e:
             logger.error("Failed to process '%s': %s", row["name"], e)
             result["status"] = f"error: {e}"
