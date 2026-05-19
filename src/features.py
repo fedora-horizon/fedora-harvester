@@ -1,20 +1,9 @@
 import logging
 import os
-from dotenv import load_dotenv
 from src.ckan_client import CkanClient
 from src.csv_reader import parse_csv
 from src.harvester import Harvester
 from src.cleaner import Cleaner
-
-load_dotenv()
-
-ckan_url = os.getenv("CKAN_URL")
-ckan_api_key = os.getenv("CKAN_API_KEY")
-
-if not ckan_url or not ckan_api_key:
-    raise ValueError(
-        "CKAN_URL and CKAN_API_KEY must be set in .env or environment."
-    )
 
 logger = logging.getLogger(__name__)
 
@@ -25,14 +14,14 @@ _SUMMARY_BANNER = ( "\n\n"
 )
 
 
-def harvest_from_csv(csv_path: str) -> None:
+def harvest_from_csv(ckan_client: CkanClient, csv_path: str) -> None:
     """Run harvest jobs for every row defined in a CSV file.
 
     Args:
+        ckan_client: An instance of the CKAN client.
         csv_path: Path to the CSV file containing harvest source definitions.
     """
-    client = CkanClient(ckan_url, ckan_api_key)
-    harvester = Harvester(client)
+    harvester = Harvester(ckan_client)
     rows = parse_csv(csv_path)
 
     if not rows:
@@ -46,14 +35,14 @@ def harvest_from_csv(csv_path: str) -> None:
         logger.info(" - Source '%s': %s", res["name"], res["status"])
 
 
-def delete_from_csv(csv_path: str) -> None:
+def delete_from_csv(ckan_client: CkanClient, csv_path: str) -> None:
     """Delete harvest sources for every row defined in a CSV file.
 
     Args:
+        ckan_client: An instance of the CKAN client.
         csv_path: Path to the CSV file containing harvest source definitions.
     """
-    client = CkanClient(ckan_url, ckan_api_key)
-    cleaner = Cleaner(client)
+    cleaner = Cleaner(ckan_client)
     rows = parse_csv(csv_path)
 
     if not rows:
