@@ -1,10 +1,10 @@
-import os
 import sys
 import argparse
 import logging
-from src.features import harvest_from_csv , delete_from_csv
+from src.features import harvest_from_csv, delete_from_csv
 
 logger = logging.getLogger(__name__)
+
 
 def main() -> None:
     """Entry point — parse CLI arguments and dispatch to the appropriate command."""
@@ -30,7 +30,7 @@ def main() -> None:
         dest="update_from_csv",
         help="Path to CSV file with harvest source definitions to update. (Not implemented yet)",
     )
-    
+
     args = parser.parse_args()
 
     logging.basicConfig(
@@ -44,6 +44,7 @@ def main() -> None:
 
     if args.delete_from_csv:
         delete_from_csv(args.delete_from_csv)
+
 
 if __name__ == "__main__":
     main()
