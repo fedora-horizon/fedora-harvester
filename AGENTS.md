@@ -20,8 +20,9 @@ CLI flags are mutually exclusive (`argparse`). `--update-from-csv` is a stub —
 
 | File | Role |
 |---|---|
-| `src/cli.py` | Argparse entry point; dispatches to `features.py` |
-| `src/features.py` | Wires `CkanClient` + `Harvester`/`Cleaner`; validates env vars at import |
+| `src/cli.py` | Argparse entry point; creates `CkanClient` from config, dispatches to `features.py` |
+| `src/config.py` | Loads `.env`; validates all `UPPERCASE` class attributes via `_BaseConfig` |
+| `src/features.py` | Accepts `CkanClient` + CSV path; orchestrates `Harvester`/`Cleaner` |
 | `src/harvester.py` | `Harvester` — create/ensure harvest sources and trigger jobs |
 | `src/cleaner.py` | `Cleaner` — delete source + org datasets + org |
 | `src/ckan_client.py` | CKAN REST API wrapper (`/api/3/action/*`); all methods return parsed `dict` |
@@ -31,7 +32,7 @@ CLI flags are mutually exclusive (`argparse`). `--update-from-csv` is a stub —
 ## Quirks & gotchas
 
 - **SSL verification is disabled** globally (`verify=False` in `HttpClient`); `InsecureRequestWarning` suppressed. This is intentional for the target environment.
-- **`.env` is loaded implicitly** by `features.py` via `dotenv.load_dotenv()`. Required vars: `CKAN_URL`, `CKAN_API_KEY`. Missing vars raise `ValueError` at import with a descriptive message.
+- **`.env` is loaded implicitly** by `config.py` via `dotenv.load_dotenv()`. Required vars: `CKAN_URL`, `CKAN_API_KEY`. Missing vars raise `ValueError` at import with a descriptive message.
 - **CSV quirks**: `config` column must be valid JSON or row is skipped; `active` column accepts `True`/`1`/`yes` (case-insensitive); BOM is handled.
 - **Tests** are pure unit tests with `unittest.mock` — no integration/network. No `requests-mock`.
 - **No build/CI/lint/typecheck** — there is nothing to run beyond `pytest`.
