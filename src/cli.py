@@ -1,6 +1,8 @@
 import sys
 import argparse
 import logging
+from src.config import config
+from src.ckan_client import CkanClient
 from src.features import harvest_from_csv, delete_from_csv
 
 logger = logging.getLogger(__name__)
@@ -39,11 +41,15 @@ def main() -> None:
         datefmt="%Y-%m-%d %H:%M:%S",
     )
 
-    if args.harvest_from_csv:
-        harvest_from_csv(args.harvest_from_csv)
+    client = CkanClient(config.CKAN_URL, config.CKAN_API_KEY)
 
-    if args.delete_from_csv:
-        delete_from_csv(args.delete_from_csv)
+    if args.harvest_from_csv:
+        harvest_from_csv(client, args.harvest_from_csv)
+    elif args.delete_from_csv:
+        delete_from_csv(client, args.delete_from_csv)
+    elif args.update_from_csv:
+        logger.error("--update-from-csv is not implemented yet.")
+        sys.exit(1)
 
 
 if __name__ == "__main__":
