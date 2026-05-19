@@ -43,7 +43,7 @@ class CkanClient:
             f"{self.API_BASE_PATH}/organization_show",
             json={"id": org_name,
                   "include_datasets": include_datasets},
-        )
+        ).json()
         
     def create_organization(self, data: dict) -> dict:
         """Create an organization in CKAN if it does not already exist.
@@ -64,7 +64,7 @@ class CkanClient:
             return {}
 
         payload = {key: data[key] for key in _ORGANIZATION_FIELDS if key in data}
-        return self.http.post(f"{self.API_BASE_PATH}/organization_create", json=payload)
+        return self.http.post(f"{self.API_BASE_PATH}/organization_create", json=payload).json()
 
     def delete_organization(self, org_id: str) -> dict:
         """Delete an organization by ID.
@@ -75,7 +75,7 @@ class CkanClient:
         return self.http.post(
             f"{self.API_BASE_PATH}/organization_delete",
             json={"id": org_id},
-        )
+        ).json()
     
     def delete_organization_datasets(self, org_id: str) -> dict:
         """Delete all datasets belonging to an organization.
@@ -84,18 +84,14 @@ class CkanClient:
             org_id: ID of the organization whose datasets should be deleted.
         """
         org = self.show_organization(org_id)
-        if hasattr(org, "json"):
-            org = org.json()  
-        else :
-            return {"results": []}
         datasets = org.get("result", {}).get("packages", [])
         results = []
         for dataset in datasets:
             dataset_id = dataset.get("id")
             if dataset_id:
-                result = self.delete_package(dataset_id)
+                self.delete_package(dataset_id)
                 result = self.purge_package(dataset_id)
-                results.append([dataset_id, result.json()['success']])
+                results.append([dataset_id, result.get("success", False)])
         return {"results": results}
 
     # ------------------------------------------------------------------
@@ -113,7 +109,7 @@ class CkanClient:
             f"{self.API_BASE_PATH}/harvest_source_show",
             json={"id": source_name,
                   "include_datasets": include_datasets}
-        )
+        ).json()
 
     def harvest_source_create(self, data: dict) -> dict:
         """Create a new harvest source.
@@ -121,7 +117,7 @@ class CkanClient:
         Args:
             data: Harvest source payload accepted by the CKAN harvesting extension.
         """
-        return self.http.post(f"{self.API_BASE_PATH}/harvest_source_create", json=data)
+        return self.http.post(f"{self.API_BASE_PATH}/harvest_source_create", json=data).json()
 
     def harvest_source_delete(self, source_id: str) -> dict:
         """(Soft) Delete a harvest source by ID.
@@ -132,7 +128,7 @@ class CkanClient:
         return self.http.post(
             f"{self.API_BASE_PATH}/harvest_source_delete",
             json={"id": source_id},
-        )
+        ).json()
 
     def harvest_source_purge(self, source_id: str) -> dict:
         """Permanently remove a harvest source from the database.
@@ -143,7 +139,7 @@ class CkanClient:
         return self.http.post(
             f"{self.API_BASE_PATH}/harvest_source_purge",
             json={"id": source_id},
-        )
+        ).json()
 
     # ------------------------------------------------------------------
     # Packages
@@ -163,7 +159,8 @@ class CkanClient:
         return self.http.post(
             f"{self.API_BASE_PATH}/package_delete",
             json={"id": package_id},
-        )
+        ).json()
+
     def purge_package(self, package_id: str) -> dict:
         """Permanently remove a package from the database.
 
@@ -173,7 +170,7 @@ class CkanClient:
         return self.http.post(
             f"{self.API_BASE_PATH}/dataset_purge",
             json={"id": package_id},
-        )
+        ).json()
     # ------------------------------------------------------------------
     # Harvest jobs
     # ------------------------------------------------------------------
@@ -189,4 +186,4 @@ class CkanClient:
         return self.http.post(
             f"{self.API_BASE_PATH}/harvest_job_create",
             json={"source_id": source_id, "run": run},
-        )
+        ).json()
