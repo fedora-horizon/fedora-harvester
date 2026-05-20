@@ -8,26 +8,28 @@
 ## Key commands
 ```bash
 uv sync                              # install deps + dev
-uv run python -m src.cli --harvest-from-csv <csv>   # harvest
-uv run python -m src.cli --delete-from-csv <csv>    # delete
-uv run python -m src.cli --update-from-csv <csv>    # NOT IMPLEMENTED
+uv sync                              # install deps + dev
+uv run python -m src.cli harvest <csv>              # harvest
+uv run python -m src.cli delete <csv>               # delete
+uv run python -m src.cli update <csv>               # NOT IMPLEMENTED
+fedora-harvester harvest <csv>                      # CLI command (after `uv sync`)
 uv run pytest tests/ -v -k <name>                   # single test
 ```
 
-CLI flags are mutually exclusive (`argparse`). `--update-from-csv` is a stub — no code behind it.
+CLI uses subcommands (`harvest` / `delete` / `update`). `update` is a stub — no code behind it.
 
 ## Architecture
 
 | File | Role |
 |---|---|
-| `src/cli.py` | Argparse entry point; creates `CkanClient` from config, dispatches to `features.py` |
-| `src/config.py` | Loads `.env`; validates all `UPPERCASE` class attributes via `_BaseConfig` |
-| `src/features.py` | Accepts `CkanClient` + CSV path; orchestrates `Harvester`/`Cleaner` |
-| `src/harvester.py` | `Harvester` — create/ensure harvest sources and trigger jobs |
-| `src/cleaner.py` | `Cleaner` — delete source + org datasets + org |
-| `src/ckan_client.py` | CKAN REST API wrapper (`/api/3/action/*`); all methods return parsed `dict` |
-| `src/http_client.py` | `requests` wrapper with SSL **disabled** |
-| `src/csv_reader.py` | `parse_csv()` — pandas-based CSV parser |
+| `src/cli.py` | Argparse entry point; creates `CkanClient` from config, dispatches to features |
+| `src/config/config.py` | Loads `.env`; validates `CKAN_URL` / `CKAN_API_KEY` |
+| `src/ckan/features.py` | Accepts `CkanClient` + CSV path; orchestrates `Harvester`/`Cleaner` |
+| `src/ckan/harvester.py` | `Harvester` — create/ensure harvest sources and trigger jobs |
+| `src/ckan/cleaner.py` | `Cleaner` — delete source + org datasets + org |
+| `src/ckan/ckan_client.py` | CKAN REST API wrapper (`/api/3/action/*`); all methods return parsed `dict` |
+| `src/utils/http_client.py` | `requests` wrapper with SSL **disabled** |
+| `src/utils/csv_reader.py` | `parse_csv()` — pandas-based CSV parser |
 
 ## Quirks & gotchas
 

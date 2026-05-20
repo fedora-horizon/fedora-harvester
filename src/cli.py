@@ -16,22 +16,17 @@ def main() -> None:
         action="store_true",
         help="Enable debug logging.",
     )
-    main_features = parser.add_mutually_exclusive_group(required=True)
-    main_features.add_argument(
-        "--harvest-from-csv",
-        dest="harvest_from_csv",
-        help="Path to CSV file with harvest source definitions to create.",
-    )
-    main_features.add_argument(
-        "--delete-from-csv",
-        dest="delete_from_csv",
-        help="Path to CSV file with harvest source definitions to delete.",
-    )
-    main_features.add_argument(
-        "--update-from-csv",
-        dest="update_from_csv",
-        help="Path to CSV file with harvest source definitions to update. (Not implemented yet)",
-    )
+
+    subparsers = parser.add_subparsers(dest="command", required=True, help="Sub-command")
+
+    p_harvest = subparsers.add_parser("harvest", help="Create/ensure harvest sources and trigger jobs")
+    p_harvest.add_argument("csv_path", help="Path to CSV file with harvest source definitions")
+
+    p_delete = subparsers.add_parser("delete", help="Delete harvest sources, datasets, and organizations")
+    p_delete.add_argument("csv_path", help="Path to CSV file with harvest source definitions")
+
+    p_update = subparsers.add_parser("update", help="Update harvest sources (NOT IMPLEMENTED)")
+    p_update.add_argument("csv_path", help="Path to CSV file with harvest source definitions")
 
     args = parser.parse_args()
 
@@ -43,12 +38,12 @@ def main() -> None:
 
     client = CkanClient(config.CKAN_URL, config.CKAN_API_KEY)
 
-    if args.harvest_from_csv:
-        harvest_from_csv(client, args.harvest_from_csv)
-    elif args.delete_from_csv:
-        delete_from_csv(client, args.delete_from_csv)
-    elif args.update_from_csv:
-        logger.error("--update-from-csv is not implemented yet.")
+    if args.command == "harvest":
+        harvest_from_csv(client, args.csv_path)
+    elif args.command == "delete":
+        delete_from_csv(client, args.csv_path)
+    elif args.command == "update":
+        logger.error("update is not implemented yet.")
         sys.exit(1)
 
 
