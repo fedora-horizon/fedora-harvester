@@ -100,8 +100,7 @@ class HttpClient:
             path: URL path appended to ``base_url``.
             json: Data serialised as JSON and sent as the request body.
             headers: Per-request headers that override session defaults.
-            timeout: Socket timeout in seconds; falls back to the
-                     client-level default when omitted.
+            timeout: Socket timeout in seconds.
 
         Returns:
             The :class:`requests.Response` object for a successful request.
