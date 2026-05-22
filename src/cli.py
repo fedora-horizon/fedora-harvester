@@ -28,6 +28,12 @@ def main() -> None:
     p_update = subparsers.add_parser("update", help="Update harvest sources (NOT IMPLEMENTED)")
     p_update.add_argument("csv_path", help="Path to CSV file with harvest source definitions")
 
+    parser.add_argument(
+        "--row_number", "-n",
+        type=int,
+        help="Row number to process.",
+        default=0,
+    )
     args = parser.parse_args()
 
     logging.basicConfig(
@@ -39,9 +45,11 @@ def main() -> None:
     client = CkanClient(config.CKAN_URL, config.CKAN_API_KEY)
 
     if args.command == "harvest":
-        harvest_from_csv(client, args.csv_path)
+        harvest_from_csv(client, args.csv_path, row_number=args.row_number)
     elif args.command == "delete":
-        delete_from_csv(client, args.csv_path)
+        delete_from_csv(client, args.csv_path, row_number=args.row_number)
+    elif args.command == "create_package":
+        create_package_from_csv(client, args.csv_path, row_number=args.row_number)
     elif args.command == "update":
         logger.error("update is not implemented yet.")
         sys.exit(1)
