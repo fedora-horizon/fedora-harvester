@@ -1,5 +1,4 @@
 import logging
-import os
 from src.ckan.ckan_client import CkanClient
 from src.utils.csv_reader import parse_csv
 from src.ckan.harvester import Harvester
@@ -14,15 +13,16 @@ _SUMMARY_BANNER = ( "\n\n"
 )
 
 
-def harvest_from_csv(ckan_client: CkanClient, csv_path: str) -> None:
+def harvest_from_csv(ckan_client: CkanClient, csv_path: str , row_number: int = 0) -> list:
     """Run harvest jobs for every row defined in a CSV file.
 
     Args:
         ckan_client: An instance of the CKAN client.
         csv_path: Path to the CSV file containing harvest source definitions.
+        row_number: The specific row number to process.
     """
     harvester = Harvester(ckan_client)
-    rows = parse_csv(csv_path)
+    rows = parse_csv(csv_path, row_number=row_number)
 
     if not rows:
         logger.warning("No valid rows found in CSV.")
@@ -33,17 +33,20 @@ def harvest_from_csv(ckan_client: CkanClient, csv_path: str) -> None:
     logger.info(_SUMMARY_BANNER)
     for res in results:
         logger.info(" - Source '%s': %s", res["name"], res["status"])
+    
+    return results
 
 
-def delete_from_csv(ckan_client: CkanClient, csv_path: str) -> None:
+def delete_from_csv(ckan_client: CkanClient, csv_path: str, row_number: int = 0) -> list:
     """Delete harvest sources for every row defined in a CSV file.
 
     Args:
         ckan_client: An instance of the CKAN client.
         csv_path: Path to the CSV file containing harvest source definitions.
+        row_number: The specific row number to process.
     """
     cleaner = Cleaner(ckan_client)
-    rows = parse_csv(csv_path)
+    rows = parse_csv(csv_path, row_number=row_number)
 
     if not rows:
         logger.warning("No valid rows found in CSV.")
@@ -54,3 +57,5 @@ def delete_from_csv(ckan_client: CkanClient, csv_path: str) -> None:
     logger.info(_SUMMARY_BANNER)
     for res in results:
         logger.info(" - Source '%s': %s", res["name"], res["status"])
+    
+    return results

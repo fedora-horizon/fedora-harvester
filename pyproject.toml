@@ -9,6 +9,9 @@ dependencies = [
     "python-dotenv>=1.0",
 ]
 
+[tool.setuptools.packages.find]
+include = ["src", "src.*"]
+
 [project.scripts]
 fedora-harvester = "src.cli:main"
 

@@ -1,9 +1,10 @@
+*.pyc
+.env.example
 .venv/
 __pycache__/
 *.pyc
 .env.example
 .pytest_cache/
 *.egg-info/
-
 sources/
 experiments/
