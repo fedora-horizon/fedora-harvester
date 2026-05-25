@@ -2,8 +2,6 @@
 
 Automate CKAN harvest jobs from a CSV definition file via the [ckanext-harvest](https://github.com/ckan/ckanext-harvest) API.
 
-For each row in the CSV, fedora-harvester ensures the organization and harvest source exist in CKAN, then triggers a harvest job. It also supports deleting harvest sources along with their datasets and organizations.
-
 ## Prerequisites
 
 - [uv](https://docs.astral.sh/uv/) — Python package manager
