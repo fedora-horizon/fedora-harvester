@@ -42,23 +42,33 @@ This creates a virtual environment with all dependencies. Activate it or use `uv
 
 ## Configuration
 
-```bash
-cp .env.example .env
-```
-
-Edit `.env` with your CKAN instance details:
+The tool reads these environment variables at startup:
 
 | Variable       | Description                     |
 |----------------|---------------------------------|
 | `CKAN_URL`     | Base URL of the CKAN instance   |
 | `CKAN_API_KEY` | CKAN API key for authentication |
 
-Both variables are required — the program exits with code 1 if either is missing or empty.
+Both are required — the program exits with code 1 if either is missing or empty.
+
+Create a `.env` file in the project root to set them (it is loaded automatically):
+
+```bash
+cp .env.example .env
+```
+
+You can also export them directly in your shell:
+
+
+```bash
+export CKAN_URL="https://ckan.example.com" 
+export CKAN_API_KEY="your-key"
+```
 
 ## Usage
 
 ```
-fedora-harvester [-v] <command> <csv_path> [-n <int>]
+fedora-harvester [-n <int>] [-v] <command> <csv_path> 
 ```
 
 ### Commands
@@ -83,19 +93,19 @@ fedora-harvester [-v] <command> <csv_path> [-n <int>]
 fedora-harvester harvest sources/harvest_sources.csv
 
 # Harvest a single source (row 2)
-fedora-harvester harvest sources/harvest_sources.csv --row-number 2
+fedora-harvester --row-number 2 harvest sources/harvest_sources.csv 
 
 # Delete sources, datasets, and organizations
 fedora-harvester delete sources/harvest_sources.csv
 
 # Verbose / debug output
-fedora-harvester harvest sources/harvest_sources.csv --verbose
+fedora-harvester --verbose harvest sources/harvest_sources.csv 
 ```
 
 When using the local development install, prefix with `uv run`:
 
 ```bash
-uv run fedora-harvester harvest sources/harvest_sources.csv
+uv run python -m src.cli harvest sources/harvest_sources.csv
 ```
 
 ### CSV Format
