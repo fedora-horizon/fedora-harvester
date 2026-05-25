@@ -109,7 +109,7 @@ The CSV is read with UTF-8 BOM encoding. Whitespace in column names and values i
 | `name`       | Yes      | Unique identifier for the harvest source                         |
 | `title`      | Yes      | Human-readable name (defaults to `name`)                         |
 | `url`        | Yes      | Source URL to harvest                                            |
-| `source_type`| Yes      | Harvester type: `ckan`, `dcat`, `waf`, `csw`, `dcat_rdf`, etc.  |
+| `source_type`| Yes      | Harvester type: `ckan`, `dcat`, `csw`, `dcat_rdf`, etc.  |
 | `owner_org`  | Yes      | Organization name or ID                                          |
 | `frequency`  | No       | `MANUAL`, `DAILY`, `WEEKLY`, `BIWEEKLY`, `ALWAYS` (default: `MANUAL`) |
 | `active`     | No       | `True` or `False` (defaults to `True`)                                |
@@ -118,11 +118,10 @@ The CSV is read with UTF-8 BOM encoding. Whitespace in column names and values i
 
 ### Example CSV
 
-```csv
-title,name,description,url,source_type,owner_org,frequency,active,notes,config
-ISPRA,rep-isprambiente-it,,https://rep.isprambiente.it/file/catalog/ispra_catalog.ttl,dcat_rdf,rep-isprambiente-it,MANUAL,True,,{}
-istat,istat-it,,https://www.istat.it/storage/IstatData/catalog_rev.rdf,dcat_rdf,istat-it,MANUAL,True,,{}
-```
+| title | name       | url                                                                  | source_type | owner_org             | frequency | active | config |
+|-------|------------|----------------------------------------------------------------------|-------------|-----------------------|-----------|--------|--------|
+| ISPRA | rep-isprambiente-it | https://rep.isprambiente.it/file/catalog/ispra_catalog.ttl          | dcat_rdf    | rep-isprambiente-it   | MANUAL    | true   | `{}`   |
+| istat | istat-it   | https://www.istat.it/storage/IstatData/catalog_rev.rdf              | dcat_rdf    | istat-it              | MANUAL    | true   | `{}` |
 
 ## How It Works
 
