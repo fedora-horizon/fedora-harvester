@@ -51,18 +51,18 @@ The tool reads these environment variables at startup:
 
 Both are required — the program exits with code 1 if either is missing or empty.
 
-Create a `.env` file in the project root to set them (it is loaded automatically):
-
-```bash
-cp .env.example .env
-```
-
-You can also export them directly in your shell:
+Export them directly in your shell :
 
 
 ```bash
 export CKAN_URL="https://ckan.example.com" 
 export CKAN_API_KEY="your-key"
+```
+
+You can also create a `.env` file in the project root to set them (for develpement only):
+
+```bash
+cp .env.example .env
 ```
 
 ## Usage
