@@ -1,5 +1,4 @@
 import logging
-import os
 from src.ckan.ckan_client import CkanClient
 from src.utils.csv_reader import parse_csv
 from src.ckan.harvester import Harvester
