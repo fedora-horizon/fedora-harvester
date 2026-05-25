@@ -10,7 +10,7 @@ dependencies = [
 ]
 
 [tool.setuptools.packages.find]
-include = ["src*"]
+include = ["src", "src.*"]
 
 [project.scripts]
 fedora-harvester = "src.cli:main"
