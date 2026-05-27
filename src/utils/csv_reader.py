@@ -39,6 +39,10 @@ def parse_csv(path: str, row_number: int = 0) -> list[dict]:
         logger.debug("Processing only row number %d", row_number)
         return [rows[row_number - 1]]
     else:
-        logger.warning("Invalid row number %d. It should be between 1 and %d.", row_number, len(rows))
+        logger.warning(
+            "Invalid row number %d. It should be between 1 and %d.",
+            row_number,
+            len(rows),
+        )
         return []
     return rows

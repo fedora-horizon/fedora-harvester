@@ -17,7 +17,11 @@ class Harvester:
             logger.info("Source '%s' already exists (id=%s)", name, source_id)
             return source_id, "existed"
         except RuntimeError as e:
-            if "404" not in str(e) and "Not found" not in str(e) and "not found" not in str(e):
+            if (
+                "404" not in str(e)
+                and "Not found" not in str(e)
+                and "not found" not in str(e)
+            ):
                 raise
         data = {
             "name": row["name"],
@@ -40,15 +44,16 @@ class Harvester:
             return name, f"not created: {e}"
 
     def process_row(self, row: dict) -> dict:
-        result: dict = {
-            "name": row["name"],
-            "status": "error"
-        }
+        result: dict = {"name": row["name"], "status": "error"}
         try:
             resp = self.client.create_organization(row)
             if resp:
-                logger.info("Organization '%s' created successfully", row.get("owner_org", ""))
-            logger.debug("Processing source '%s' with URL '%s'", row["name"], row["url"])
+                logger.info(
+                    "Organization '%s' created successfully", row.get("owner_org", "")
+                )
+            logger.debug(
+                "Processing source '%s' with URL '%s'", row["name"], row["url"]
+            )
             source_id, action = self.add_source(row)
             result["status"] = action
             if action in ("existed", "created"):
@@ -57,7 +62,9 @@ class Harvester:
                     result["job_id"] = job.get("result", {}).get("id", "")
                     result["status"] = f"{action} + job triggered"
                 except RuntimeError as e:
-                    logger.error("Failed to trigger harvest job for '%s': %s", row["name"], e)
+                    logger.error(
+                        "Failed to trigger harvest job for '%s': %s", row["name"], e
+                    )
                     result["status"] = f"{action} + job failed: {e}"
         except RuntimeError as e:
             logger.error("Failed to process '%s': %s", row["name"], e)

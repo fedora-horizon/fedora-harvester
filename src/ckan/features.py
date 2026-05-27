@@ -6,14 +6,17 @@ from src.ckan.cleaner import Cleaner
 
 logger = logging.getLogger(__name__)
 
-_SUMMARY_BANNER = ( "\n\n"
+_SUMMARY_BANNER = (
+    "\n\n"
     "#####################################################################\n"
     "#                            SUMMARY                                #\n"
     "#####################################################################"
 )
 
 
-def harvest_from_csv(ckan_client: CkanClient, csv_path: str , row_number: int = 0) -> list:
+def harvest_from_csv(
+    ckan_client: CkanClient, csv_path: str, row_number: int = 0
+) -> list:
     """Run harvest jobs for every row defined in a CSV file.
 
     Args:
@@ -33,11 +36,13 @@ def harvest_from_csv(ckan_client: CkanClient, csv_path: str , row_number: int = 
     logger.info(_SUMMARY_BANNER)
     for res in results:
         logger.info(" - Source '%s': %s", res["name"], res["status"])
-    
+
     return results
 
 
-def delete_from_csv(ckan_client: CkanClient, csv_path: str, row_number: int = 0) -> list:
+def delete_from_csv(
+    ckan_client: CkanClient, csv_path: str, row_number: int = 0
+) -> list:
     """Delete harvest sources for every row defined in a CSV file.
 
     Args:
@@ -57,5 +62,5 @@ def delete_from_csv(ckan_client: CkanClient, csv_path: str, row_number: int = 0)
     logger.info(_SUMMARY_BANNER)
     for res in results:
         logger.info(" - Source '%s': %s", res["name"], res["status"])
-    
+
     return results

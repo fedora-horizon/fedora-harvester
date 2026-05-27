@@ -24,11 +24,13 @@ class TestHarvesterAddSource:
         client.harvest_source_create.return_value = {"result": {"id": "src-new"}}
         harv = Harvester(client)
 
-        source_id, action = harv.add_source({
-            "name": "s1",
-            "url": "http://ex.com",
-            "source_type": "ckan",
-        })
+        source_id, action = harv.add_source(
+            {
+                "name": "s1",
+                "url": "http://ex.com",
+                "source_type": "ckan",
+            }
+        )
 
         assert source_id == "src-new"
         assert action == "created"
@@ -48,11 +50,13 @@ class TestHarvesterAddSource:
         client.harvest_source_create.side_effect = RuntimeError("403 Forbidden")
         harv = Harvester(client)
 
-        source_id, action = harv.add_source({
-            "name": "s1",
-            "url": "http://ex.com",
-            "source_type": "ckan",
-        })
+        source_id, action = harv.add_source(
+            {
+                "name": "s1",
+                "url": "http://ex.com",
+                "source_type": "ckan",
+            }
+        )
 
         assert "not created" in action
 
@@ -65,7 +69,9 @@ class TestHarvesterProcessRow:
         client.create_organization.return_value = {}
         harv = Harvester(client)
 
-        result = harv.process_row({"name": "s1", "url": "http://ex.com", "source_type": "ckan"})
+        result = harv.process_row(
+            {"name": "s1", "url": "http://ex.com", "source_type": "ckan"}
+        )
 
         assert result["name"] == "s1"
         assert result["status"] == "existed + job triggered"
@@ -80,9 +86,13 @@ class TestHarvesterProcessRow:
         client.create_organization.return_value = {}
         harv = Harvester(client)
 
-        result = harv.process_row({
-            "name": "s1", "url": "http://ex.com", "source_type": "ckan",
-        })
+        result = harv.process_row(
+            {
+                "name": "s1",
+                "url": "http://ex.com",
+                "source_type": "ckan",
+            }
+        )
 
         assert result["name"] == "s1"
         assert result["status"] == "created + job triggered"
@@ -95,7 +105,9 @@ class TestHarvesterProcessRow:
         client.create_organization.return_value = {}
         harv = Harvester(client)
 
-        result = harv.process_row({"name": "s1", "url": "http://ex.com", "source_type": "ckan"})
+        result = harv.process_row(
+            {"name": "s1", "url": "http://ex.com", "source_type": "ckan"}
+        )
 
         assert result["name"] == "s1"
         assert "job failed" in result["status"]
@@ -107,7 +119,9 @@ class TestHarvesterProcessRow:
         client.create_organization.return_value = {}
         harv = Harvester(client)
 
-        result = harv.process_row({"name": "s1", "url": "http://ex.com", "source_type": "ckan"})
+        result = harv.process_row(
+            {"name": "s1", "url": "http://ex.com", "source_type": "ckan"}
+        )
 
         assert result["status"] == "existed + job triggered"
 
@@ -124,10 +138,12 @@ class TestHarvesterProcessRows:
         client.create_organization.return_value = {}
         harv = Harvester(client)
 
-        results = harv.process_rows([
-            {"name": "s1", "url": "http://a.com", "source_type": "ckan"},
-            {"name": "s2", "url": "http://b.com", "source_type": "dcat"},
-        ])
+        results = harv.process_rows(
+            [
+                {"name": "s1", "url": "http://a.com", "source_type": "ckan"},
+                {"name": "s2", "url": "http://b.com", "source_type": "dcat"},
+            ]
+        )
 
         assert len(results) == 2
         assert results[0]["status"] == "existed + job triggered"

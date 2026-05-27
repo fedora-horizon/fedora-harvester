@@ -3,11 +3,13 @@ from src.utils.http_client import HttpClient
 
 logger = logging.getLogger(__name__)
 
-_ORGANIZATION_FIELDS = frozenset({"name", "title", "description", "image_url", "extras"})
+_ORGANIZATION_FIELDS = frozenset(
+    {"name", "title", "description", "image_url", "extras"}
+)
 
 
 class CkanClient:
-    """Client for interacting with the CKAN REST API """
+    """Client for interacting with the CKAN REST API"""
 
     API_BASE_PATH = "/api/3/action"
 
@@ -41,10 +43,9 @@ class CkanClient:
         """
         return self.http.post(
             f"{self.API_BASE_PATH}/organization_show",
-            json={"id": org_name,
-                  "include_datasets": include_datasets},
+            json={"id": org_name, "include_datasets": include_datasets},
         ).json()
-        
+
     def create_organization(self, data: dict) -> dict:
         """Create an organization in CKAN if it does not already exist.
 
@@ -60,11 +61,15 @@ class CkanClient:
         owner_org = data.get("owner_org", "")
 
         if owner_org in organizations.get("result", []):
-            logger.info("Organization '%s' already exists — skipping creation.", owner_org)
+            logger.info(
+                "Organization '%s' already exists — skipping creation.", owner_org
+            )
             return {}
 
         payload = {key: data[key] for key in _ORGANIZATION_FIELDS if key in data}
-        return self.http.post(f"{self.API_BASE_PATH}/organization_create", json=payload).json()
+        return self.http.post(
+            f"{self.API_BASE_PATH}/organization_create", json=payload
+        ).json()
 
     def delete_organization(self, org_id: str) -> dict:
         """Delete an organization by ID.
@@ -76,7 +81,7 @@ class CkanClient:
             f"{self.API_BASE_PATH}/organization_delete",
             json={"id": org_id},
         ).json()
-    
+
     def delete_organization_datasets(self, org_id: str) -> dict:
         """Delete all datasets belonging to an organization.
 
@@ -98,7 +103,9 @@ class CkanClient:
     # Harvest sources
     # ------------------------------------------------------------------
 
-    def harvest_source_show(self, source_name: str, include_datasets: bool = True) -> dict:
+    def harvest_source_show(
+        self, source_name: str, include_datasets: bool = True
+    ) -> dict:
         """Retrieve details for a harvest source by name or ID.
 
         Args:
@@ -107,8 +114,7 @@ class CkanClient:
         """
         return self.http.post(
             f"{self.API_BASE_PATH}/harvest_source_show",
-            json={"id": source_name,
-                  "include_datasets": include_datasets}
+            json={"id": source_name, "include_datasets": include_datasets},
         ).json()
 
     def harvest_source_create(self, data: dict) -> dict:
@@ -117,7 +123,9 @@ class CkanClient:
         Args:
             data: Harvest source payload accepted by the CKAN harvesting extension.
         """
-        return self.http.post(f"{self.API_BASE_PATH}/harvest_source_create", json=data).json()
+        return self.http.post(
+            f"{self.API_BASE_PATH}/harvest_source_create", json=data
+        ).json()
 
     def harvest_source_delete(self, source_id: str) -> dict:
         """(Soft) Delete a harvest source by ID.
@@ -171,6 +179,7 @@ class CkanClient:
             f"{self.API_BASE_PATH}/dataset_purge",
             json={"id": package_id},
         ).json()
+
     # ------------------------------------------------------------------
     # Harvest jobs
     # ------------------------------------------------------------------

@@ -28,7 +28,7 @@ class HttpClient:
     """Thin wrapper around :class:`requests.Session` with a fixed base URL.
 
     All requests disable SSL verification and suppress the associated
-    ``urllib3`` warnings. 
+    ``urllib3`` warnings.
     """
 
     def __init__(
