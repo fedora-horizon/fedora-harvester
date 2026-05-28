@@ -1,5 +1,5 @@
 title,name,description,url,source_type,owner_org,frequency,active,notes,config
-ISPRA,rep-isprambiente-it,,https://rep.isprambiente.it/file/catalog/ispra_catalog.ttl,dcat_rdf,rep-isprambiente-it,MANUAL,True,,{}
+ISPRA,rep-isprambiente-it,,https://rep.isprambiente.it/file/catalog/ispra_catalog.ttl,dcat_rdf,rep-isprambiente-it,MANUAL,False,Ispra,"{}"
 istat,istat-it,,https://www.istat.it/storage/IstatData/catalog_rev.rdf,dcat_rdf,istat-it,MANUAL,True,,{}
 Reggio Emilia Opendata,opendata-comune-re-it,,https://opendata.comune.re.it,ckan,opendata-comune-re-it,MANUAL,True,,"{
 ""groups_filter_include"": [""ambiente"", ""regioni"", ""scienza"", ""transporti"", ""internazionali"", ""governo""],

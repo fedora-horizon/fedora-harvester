@@ -10,7 +10,7 @@ class Cleaner:
         self.client = ckan_client
 
     def process_row(self, row: dict) -> dict:
-        result: dict = {"name": row["name"], "status": "error"}
+        result: dict = {"name": row["name"], "status": ""}
         try:
             logger.info("Deleting '%s'...", row["name"])
             source = self.client.harvest_source_show(row["name"])

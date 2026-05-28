@@ -44,7 +44,7 @@ class Harvester:
             return name, f"not created: {e}"
 
     def process_row(self, row: dict) -> dict:
-        result: dict = {"name": row["name"], "status": "error"}
+        result: dict = {"name": row["name"], "status": ""}
         try:
             resp = self.client.create_organization(row)
             if resp:
