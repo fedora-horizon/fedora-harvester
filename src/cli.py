@@ -3,7 +3,11 @@ import argparse
 import logging
 from src.config.config import config
 from src.ckan.ckan_client import CkanClient
-from src.ckan.features import harvest_from_csv, delete_from_csv
+from src.ckan.features import ( 
+    harvest_from_csv, 
+    delete_from_csv, 
+    update_from_csv 
+)
 
 logger = logging.getLogger(__name__)
 
@@ -39,7 +43,7 @@ def main() -> None:
     )
 
     p_update = subparsers.add_parser(
-        "update", help="Update harvest sources (NOT IMPLEMENTED)"
+        "update", help="Update harvest sources based on CSV definitions"
     )
     p_update.add_argument(
         "csv_path", help="Path to CSV file with harvest source definitions"
@@ -67,7 +71,9 @@ def main() -> None:
     elif args.command == "delete":
         delete_from_csv(client, args.csv_path, row_number=args.row_number)
     elif args.command == "update":
-        logger.error("update is not implemented yet.")
+        update_from_csv(client, args.csv_path, row_number=args.row_number)
+    else:
+        logger.error("Unknown command: %s", args.command)
         sys.exit(1)
 
 
