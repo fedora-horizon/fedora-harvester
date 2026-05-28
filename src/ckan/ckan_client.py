@@ -127,6 +127,18 @@ class CkanClient:
             f"{self.API_BASE_PATH}/harvest_source_create", json=data
         ).json()
 
+    def harvest_source_update(self, source_id: str, data: dict) -> dict:
+        """Update an existing harvest source by ID.
+
+        Args:
+            source_id: ID of the harvest source to update.
+            data: Harvest source payload accepted by the CKAN harvesting extension.
+        """
+        payload = {"id": source_id, **data}
+        return self.http.post(
+            f"{self.API_BASE_PATH}/harvest_source_update", json=payload
+        ).json()
+        
     def harvest_source_delete(self, source_id: str) -> dict:
         """(Soft) Delete a harvest source by ID.
 

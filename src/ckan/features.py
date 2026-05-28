@@ -3,6 +3,7 @@ from src.ckan.ckan_client import CkanClient
 from src.utils.csv_reader import parse_csv
 from src.ckan.harvester import Harvester
 from src.ckan.cleaner import Cleaner
+from src.ckan.updater import Updater
 
 logger = logging.getLogger(__name__)
 
@@ -58,6 +59,31 @@ def delete_from_csv(
         return
 
     results = cleaner.process_rows(rows)
+
+    logger.info(_SUMMARY_BANNER)
+    for res in results:
+        logger.info(" - Source '%s': %s", res["name"], res["status"])
+
+    return results
+
+def update_from_csv(
+    ckan_client: CkanClient, csv_path: str, row_number: int = 0
+) -> list:
+    """Update harvest sources for every row defined in a CSV file.
+
+    Args:
+        ckan_client: An instance of the CKAN client.
+        csv_path: Path to the CSV file containing harvest source definitions.
+        row_number: The specific row number to process.
+    """
+    updater = Updater(ckan_client)
+    rows = parse_csv(csv_path, row_number=row_number)
+
+    if not rows:
+        logger.warning("No valid rows found in CSV.")
+        return
+
+    results = updater.process_rows(rows)
 
     logger.info(_SUMMARY_BANNER)
     for res in results:
