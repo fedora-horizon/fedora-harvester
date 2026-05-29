@@ -35,6 +35,13 @@ def main() -> None:
         "csv_path", help="Path to CSV file with harvest source definitions"
     )
 
+    p_harvest.add_argument(
+        "--no_queue_run",
+        "-nq",
+        type=bool,
+        help="Run the harvest job immediately without queuing.",
+    )
+
     p_delete = subparsers.add_parser(
         "delete", help="Delete harvest sources, datasets, and organizations"
     )
@@ -67,6 +74,10 @@ def main() -> None:
     client = CkanClient(config.CKAN_URL, config.CKAN_API_KEY)
 
     if args.command == "harvest":
+        if args.no_queue_run  and args.row_number == 0:
+            logger.warning("Immediate job run disabled multiple rows processing.")
+            logger.warning("To enable immediate job run, specify a single row number with --row_number.")
+            return
         harvest_from_csv(client, args.csv_path, row_number=args.row_number)
     elif args.command == "delete":
         delete_from_csv(client, args.csv_path, row_number=args.row_number)

@@ -16,7 +16,10 @@ _SUMMARY_BANNER = (
 
 
 def harvest_from_csv(
-    ckan_client: CkanClient, csv_path: str, row_number: int = 0
+    ckan_client: CkanClient, 
+    csv_path: str, 
+    row_number: int = 0,
+    no_queue_run: bool = False
 ) -> list:
     """Run harvest jobs for every row defined in a CSV file.
 
@@ -24,8 +27,9 @@ def harvest_from_csv(
         ckan_client: An instance of the CKAN client.
         csv_path: Path to the CSV file containing harvest source definitions.
         row_number: The specific row number to process.
+        no_queue_run: Whether to run the harvest job immediately without queuing.
     """
-    harvester = Harvester(ckan_client)
+    harvester = Harvester(ckan_client, no_queue_run=no_queue_run)
     rows = parse_csv(csv_path, row_number=row_number)
 
     if not rows:
@@ -42,7 +46,9 @@ def harvest_from_csv(
 
 
 def delete_from_csv(
-    ckan_client: CkanClient, csv_path: str, row_number: int = 0
+    ckan_client: CkanClient, 
+    csv_path: str, 
+    row_number: int = 0
 ) -> list:
     """Delete harvest sources for every row defined in a CSV file.
 
@@ -67,7 +73,9 @@ def delete_from_csv(
     return results
 
 def update_from_csv(
-    ckan_client: CkanClient, csv_path: str, row_number: int = 0
+    ckan_client: CkanClient, 
+    csv_path: str, 
+    row_number: int = 0
 ) -> list:
     """Update harvest sources for every row defined in a CSV file.
 

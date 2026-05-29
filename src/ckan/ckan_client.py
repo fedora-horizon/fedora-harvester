@@ -208,3 +208,14 @@ class CkanClient:
             f"{self.API_BASE_PATH}/harvest_job_create",
             json={"source_id": source_id, "run": run},
         ).json()
+
+    def no_queue_run_job(self, source_id_or_name: str) -> dict:
+        """Run a harvest job immediately without queuing.
+
+        Args:
+            source_id_or_name: ID or name of the harvest source for which to run a job.
+        """
+        return self.http.post(
+            f"{self.API_BASE_PATH}/no_queue_harvest_run_job",
+            json={"id": source_id_or_name},
+        ).json()

@@ -6,8 +6,9 @@ logger = logging.getLogger(__name__)
 
 
 class Harvester:
-    def __init__(self, client: CkanClient):
+    def __init__(self, client: CkanClient, no_queue_run: bool = False) -> None:
         self.client = client
+        self.no_queue_run = no_queue_run
 
     def add_source(self, row: dict) -> tuple[str, str]:
         name = row["name"]
@@ -58,7 +59,8 @@ class Harvester:
             result["status"] = action
             if action in ("existed", "created"):
                 try:
-                    job = self.client.harvest_job_create(source_id)
+                    # Depending on the no_queue_run flag, either run the job immediately or queue it.
+                    job = self.client.harvest_job_create(source_id, run = not self.no_queue_run)
                     result["job_id"] = job.get("result", {}).get("id", "")
                     result["status"] = f"{action} + job triggered"
                 except RuntimeError as e:
