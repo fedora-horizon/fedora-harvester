@@ -4,7 +4,6 @@
 __pycache__/
 *.pyc
 .opencode/
-.env.example
 .pytest_cache/
 .ipynb_checkpoints/
 .ruff_cache/
