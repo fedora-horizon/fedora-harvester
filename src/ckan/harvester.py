@@ -12,18 +12,16 @@ class Harvester:
 
     def add_source(self, row: dict) -> tuple[str, str]:
         name = row["name"]
+
         try:
             existing = self.client.harvest_source_show(name)
             source_id = existing.get("result", {}).get("id")
             logger.info("Source '%s' already exists (id=%s)", name, source_id)
             return source_id, "existed"
         except RuntimeError as e:
-            if (
-                "404" not in str(e)
-                and "Not found" not in str(e)
-                and "not found" not in str(e)
-            ):
+            if not any(keyword in str(e) for keyword in ("404", "Not found", "not found")):
                 raise
+
         data = {
             "name": row["name"],
             "url": row["url"],
@@ -35,6 +33,7 @@ class Harvester:
             "notes": row.get("notes", ""),
             "config": row.get("config", "{}"),
         }
+
         try:
             created = self.client.harvest_source_create(data)
             source_id = created.get("result", {}).get("id", row["name"])
@@ -46,32 +45,47 @@ class Harvester:
 
     def process_row(self, row: dict) -> dict:
         result: dict = {"name": row["name"], "status": ""}
+
         try:
             resp = self.client.create_organization(row)
             if resp:
-                logger.info(
-                    "Organization '%s' created successfully", row.get("owner_org", "")
-                )
-            logger.debug(
-                "Processing source '%s' with URL '%s'", row["name"], row["url"]
-            )
+                logger.info("Organization '%s' created successfully", row.get("owner_org", ""))
+
+            logger.debug("Processing source '%s' with URL '%s'", row["name"], row["url"])
+
             source_id, action = self.add_source(row)
             result["status"] = action
+
             if action in ("existed", "created"):
-                try:
-                    # Depending on the no_queue_run flag, either run the job immediately or queue it.
-                    job = self.client.harvest_job_create(source_id, run = not self.no_queue_run)
-                    result["job_id"] = job.get("result", {}).get("id", "")
-                    result["status"] = f"{action} + job triggered"
-                except RuntimeError as e:
-                    logger.error(
-                        "Failed to trigger harvest job for '%s': %s", row["name"], e
-                    )
-                    result["status"] = f"{action} + job failed: {e}"
+                self._trigger_harvest_job(row, source_id, action, result)
+
         except RuntimeError as e:
             logger.error("Failed to process '%s': %s", row["name"], e)
             result["status"] = f"error: {e}"
+
         return result
+
+    def _trigger_harvest_job(
+        self, row: dict, source_id: str, action: str, result: dict
+    ) -> None:
+        """Create and optionally run a harvest job for the given source."""
+        name = row["name"]
+
+        try:
+            # Queue the job, or run it immediately depending on the flag.
+            job = self.client.harvest_job_create(source_id, run=not self.no_queue_run)
+
+            if self.no_queue_run:
+                logger.info("Harvest job for source '%s' triggered immediately", name)
+                self.client.no_queue_harvest_run_job(source_id)
+                logger.info("Harvest job for source '%s' completed", name)
+
+            result["job_id"] = job.get("result", {}).get("id", "")
+            result["status"] = f"{action} + job triggered"
+
+        except RuntimeError as e:
+            logger.error("Failed to trigger harvest job for '%s': %s", name, e)
+            result["status"] = f"{action} + job failed: {e}"
 
     def process_rows(self, rows: list[dict]) -> list[dict]:
         results = []
