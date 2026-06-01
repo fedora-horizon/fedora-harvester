@@ -55,7 +55,7 @@ class Harvester:
 
             if self.no_queue_run == 1 or True :
                 logger.info("Harvest job for source '%s' triggered immediately", name)
-                self.client.no_queue_harvest_run_job(source_id)
+                self.client.no_queue_run_job(source_id)
                 logger.info("Harvest job for source '%s' completed", name)
 
             result["job_id"] = job.get("result", {}).get("id", "")
