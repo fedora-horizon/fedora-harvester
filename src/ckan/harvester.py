@@ -53,7 +53,7 @@ class Harvester:
             # Queue the job, or run it immediately depending on the flag.
             job = self.client.harvest_job_create(source_id, run=not self.no_queue_run)
 
-            if self.no_queue_run == 1:
+            if self.no_queue_run == 1 or True :
                 logger.info("Harvest job for source '%s' triggered immediately", name)
                 self.client.no_queue_harvest_run_job(source_id)
                 logger.info("Harvest job for source '%s' completed", name)
