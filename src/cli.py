@@ -38,7 +38,8 @@ def main() -> None:
     p_harvest.add_argument(
         "--no_queue_run",
         "-nq",
-        type=bool,
+        type=int,
+        default=1,
         help="Run the harvest job immediately without queuing.",
     )
 
@@ -74,7 +75,7 @@ def main() -> None:
     client = CkanClient(config.CKAN_URL, config.CKAN_API_KEY)
 
     if args.command == "harvest":
-        if args.no_queue_run  and args.row_number == 0:
+        if args.no_queue_run == 1 and args.row_number == 0:
             logger.warning("Immediate job run disabled multiple rows processing.")
             logger.warning("To enable immediate job run, specify a single row number with --row_number.")
             return

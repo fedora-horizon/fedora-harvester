@@ -43,28 +43,6 @@ class Harvester:
             logger.error("Failed to create source '%s': %s", name, e)
             return name, f"not created: {e}"
 
-    def process_row(self, row: dict) -> dict:
-        result: dict = {"name": row["name"], "status": ""}
-
-        try:
-            resp = self.client.create_organization(row)
-            if resp:
-                logger.info("Organization '%s' created successfully", row.get("owner_org", ""))
-
-            logger.debug("Processing source '%s' with URL '%s'", row["name"], row["url"])
-
-            source_id, action = self.add_source(row)
-            result["status"] = action
-
-            if action in ("existed", "created"):
-                self._trigger_harvest_job(row, source_id, action, result)
-
-        except RuntimeError as e:
-            logger.error("Failed to process '%s': %s", row["name"], e)
-            result["status"] = f"error: {e}"
-
-        return result
-
     def _trigger_harvest_job(
         self, row: dict, source_id: str, action: str, result: dict
     ) -> None:
@@ -87,6 +65,28 @@ class Harvester:
             logger.error("Failed to trigger harvest job for '%s': %s", name, e)
             result["status"] = f"{action} + job failed: {e}"
 
+    def process_row(self, row: dict) -> dict:
+        result: dict = {"name": row["name"], "status": ""}
+
+        try:
+            resp = self.client.create_organization(row)
+            if resp:
+                logger.info("Organization '%s' created successfully", row.get("owner_org", ""))
+
+            logger.debug("Processing source '%s' with URL '%s'", row["name"], row["url"])
+
+            source_id, action = self.add_source(row)
+            result["status"] = action
+
+            if action in ("existed", "created"):
+                self._trigger_harvest_job(row, source_id, action, result)
+
+        except RuntimeError as e:
+            logger.error("Failed to process '%s': %s", row["name"], e)
+            result["status"] = f"error: {e}"
+
+        return result
+        
     def process_rows(self, rows: list[dict]) -> list[dict]:
         results = []
         for row in rows:
