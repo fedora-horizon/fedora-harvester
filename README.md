@@ -175,7 +175,3 @@ fedora-harvester/
     └── test_harvester.py
 ```
 
-## Security Notes
-
-- API credentials are stored in `.env` (gitignored) — never commit them to version control.
-- SSL certificate verification is disabled on all HTTP requests (development-oriented).
