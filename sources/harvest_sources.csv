@@ -1,7 +1,13 @@
-title,name,description,url,source_type,owner_org,frequency,active,notes,config
-ISPRA,rep-isprambiente-it,,https://rep.isprambiente.it/file/catalog/ispra_catalog.ttl,dcat_rdf,rep-isprambiente-it,MANUAL,False,Ispra,"{}"
-istat,istat-it,,https://www.istat.it/storage/IstatData/catalog_rev.rdf,dcat_rdf,istat-it,MANUAL,True,,{}
-Reggio Emilia Opendata,opendata-comune-re-it,,https://opendata.comune.re.it,ckan,opendata-comune-re-it,MANUAL,True,,"{
-""groups_filter_include"": [""ambiente"", ""regioni"", ""scienza"", ""transporti"", ""internazionali"", ""governo""],
-""remote_orgs"": ""create""
+title,name,description,country,image_url,url,source_type,owner_org,frequency,active,notes,config
+Data Portal Austria,data-portal-austria,,Austria,https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT7eNPM8KD73R-qrZei8UeA0xuHYLUMh5Feh537rQZgquOtuqWHV9AfEJ6Z&s=10,https://www.data.gv.at/api/hub/search/search,dcat_ap_austria,data-portal-austria,MANUAL,True,"Austria's national open data portal, data.gv.at, serves as a central hub for national open data, offering datasets across multiple areas, including economy, health, and environment. Developed through the Cooperation OGD Austria, the platform provides free access to public sector information, promoting transparency and empowering citizens, researchers, and businesses to make data-driven decisions.","{
+  ""filter"": ""dataset"",
+  ""facets"": {
+          ""categories"": [""TRAN""],
+          ""publisher"": [""Stadt Wien"",    ""Bundesministerium für Innovation, Mobilität und Infrastruktur"",    ""Bundesministerium für Inneres"",    ""BMK"",    ""Statistik Austria"",    ""BEV"",    ""ÖBB"",    ""Cooperation OGD Österreich"",    ""Österreichisches Institut für Verkehrsdateninfrastruktur"",    ""ÖVDAT"",    ""viadonau"",    ""ASFINAG""]
+   },
+ ""limit"": 1000
+}"
+Gipuzkoa Irekia,gipuzkoa-irekia-euskadi,,,https://www.gipuzkoa.eus/documents/20933/2104259/og_image.png/4479ed33-ed27-4b2d-9401-1ac302eced42,https://opendata.euskadi.eus/contenidos/ds_general/catalogo_datos_dipu_gipuzkoa/opendata/federador_datos_dfg.rdf,dcat_rdf,gipuzkoa-irekia-euskadi,MANUAL,True,"Gipuzkoa Irekia, aligned with the principles of Open Government, wants to offer a shared space for the opening of data and the publication of transparency information to both the institutions and the citizens of Gipuzkoa.",{}
+National Public Data Portal /Nemzeti Közadatportál,kozadatportal-hu,,Hungary,https://kozadatportal.hu/img/logo_magyar.svg,https://kozadatportal.hu,ckan,kozadatportal-hu,MANUAL,True,,"{
+  ""groups_filter_include"": [""tran""]
 }"
